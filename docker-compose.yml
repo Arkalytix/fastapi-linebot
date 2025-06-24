@@ -1,0 +1,35 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  # 這是你的 FastAPI 應用程式服務
+  app:
+    build: .
+    container_name: linebot_app
+    restart: always
+    # 將 .env 檔案中的環境變數注入到容器中
+    env_file:
+      - .env
+    # --- 新增的 ports 區塊 ---
+    ports:
+      # 將主機的 5001 端口，映射到容器的 8000 端口
+      - "5001:8000"
+    # --- 區塊結束 ---
+    # 將本地的 src 目錄掛載到容器的 /code 目錄
+    # 這樣你在本地修改程式碼，容器內會同步更新，實現熱重載
+    volumes:
+      - ./src:/code
+    # 覆寫 Dockerfile 中的 CMD，加上 --reload 功能
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --app-dir /code
+
+  # 這是 Cloudflared 通道服務
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: linebot_tunnel
+    restart: always
+    # 注意這裡的 URL，它指向了上面定義的 app 服務
+    # Docker Compose 會建立內部網路，讓容器可以用服務名稱互相訪問
+    command: tunnel --no-autoupdate --url http://app:8000
+    depends_on:
+      - app

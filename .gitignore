@@ -1,0 +1,49 @@
+# .roocodeignore
+
+# 1. 本地虛擬環境和依賴
+# 忽略本地 Python 依賴，這是節省 Token 的關鍵。
+/.venv/
+
+# Python 相關的快取檔案
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Node.js 依賴 (即使現在沒有，也是模板的好習慣)
+/node_modules/
+
+
+# 2. 機密和本地設定
+# 保護你的金鑰和個人設定不外洩
+.env
+.env.*
+*.local
+
+
+# 3. 版本控制資料夾
+# AI 不需要知道 Git 的內部儲存結構
+.git/
+
+
+# 4. IDE 和編輯器設定
+# 這些是個人開發環境的設定，與程式碼邏輯無關
+.vscode/
+.idea/
+
+
+# 5. 作業系統產生的檔案
+.DS_Store
+Thumbs.db
+
+
+# 6. 建置和分發的產物
+# 這些是編譯或打包後生成的，不是原始碼
+/build/
+/dist/
+*.egg-info/
+
+
+# 7. 日誌檔案
+# 執行的日誌對 AI 分析程式碼沒有幫助
+*.log
+*.log*
